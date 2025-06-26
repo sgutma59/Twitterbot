@@ -5,7 +5,7 @@ import requests
 import os
 from dotenv import load_dotenv
 # allows the bot to choose one artwork at random
-from random import randint
+import random
 
 # pulling the keys and secrets from our .env file
 load_dotenv()
@@ -46,16 +46,13 @@ def tweet_an_artwork(tweepy_v2_client, tweepy_v1_api, search_term):
         return
 
     object_ids = search_results['objectIDs']
+    random.shuffle(object_ids) # Shuffle the list of artworks
     artwork_found = False
     parsed = None
     
-    # 2. Loop to find a suitable artwork
-    for i in range(1000): # Try up to 1000 times
-        # 3. Select a random artwork from the list of results
-        random_index = randint(0, len(object_ids) - 1)
-        obj_id = object_ids[random_index]
-        
-        print(f"Attempt {i+1}/1000: Checking object {obj_id}...")
+    # 2. Loop through the shuffled list to find a suitable artwork
+    for obj_id in object_ids:
+        print(f"Checking object {obj_id}...")
         
         r2 = requests.get(f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{obj_id}")
         if r2.status_code != 200:
@@ -69,7 +66,7 @@ def tweet_an_artwork(tweepy_v2_client, tweepy_v1_api, search_term):
             break # Found one, exit the loop
     
     if not artwork_found:
-        print(f"Couldn't find a suitable artwork for '{search_term}' after 1000 tries.")
+        print(f"Couldn't find a suitable artwork for '{search_term}'.")
         return
 
     # getting title, artist, and url
