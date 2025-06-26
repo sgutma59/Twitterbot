@@ -1,0 +1,37 @@
+name: run tweet.py
+
+on:
+  schedule:
+#    - cron: '0 * * * *' # at top of every hour
+    - cron: '0 0 * * *' # At 00:00 every day
+  
+  push: 
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # install the python version needed
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: run script 
+        run: python tweet.py
+        env: 
+            API_KEY: ${{ secrets.API_KEY }}
+            API_SECRET: ${{ secrets.API_SECRET }}
+            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+        
