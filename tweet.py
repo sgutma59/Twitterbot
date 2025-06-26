@@ -102,5 +102,5 @@ def tweet_an_artwork(tweepy_v2_client, tweepy_v1_api, search_term):
         if os.path.exists(image_filename):
             os.remove(image_filename)
  
-# calling the function with the auth data and "cat" as the search term
-tweet_an_artwork(client, api, "cat")
+# calling the function with the auth data and "woman" as the search term
+tweet_an_artwork(client, api, "woman")
