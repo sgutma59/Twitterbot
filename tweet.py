@@ -31,8 +31,8 @@ print('we loaded the auth variables')
 def tweet_an_artwork(tweepy_v2_client, tweepy_v1_api, search_term):
     print(f'Fetching art for "{search_term}" from the MET...')
 
-    # 1. Search for the given term, for objects on display and with images
-    search_url = f"https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q={search_term}"
+    # 1. Search for the given term, ONLY in the title, and for objects with images
+    search_url = f"https://collectionapi.metmuseum.org/public/collection/v1/search?title=true&hasImages=true&q={search_term}"
     r1 = requests.get(search_url)
     
     # Basic error handling
@@ -92,7 +92,8 @@ def tweet_an_artwork(tweepy_v2_client, tweepy_v1_api, search_term):
         print('Tweeting artwork...')
         
         # Create tweet using v2 client
-        tweepy_v2_client.create_tweet(text=tweet_text, media_ids=[media_id])
+        response = tweepy_v2_client.create_tweet(text=tweet_text, media_ids=[media_id])
+        print(f"Tweet response: {response}") # Add this line for debugging
         print("Tweet sent successfully!")
         
     except Exception as e:
